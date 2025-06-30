@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using WebRealtimeCommDemo.Models;
 using WebRealtimeCommDemo.Services;
+using WebRealtimeCommDemo.Utils;
 
 namespace WebRealtimeCommDemo.Demos.WebSocket;
 
@@ -146,10 +147,7 @@ public class MessagesWebSocketManager
     {
         try
         {
-            var data = JsonSerializer.Deserialize<SendMessageRequest>(messageJson, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            var data = JsonUtils.Deserialize<SendMessageRequest>(messageJson);
 
             if (!string.IsNullOrWhiteSpace(data?.Content))
             {
@@ -187,11 +185,7 @@ public class MessagesWebSocketManager
     {
         try
         {
-            var json = JsonSerializer.Serialize(eventData, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
-
+            var json = JsonUtils.Serialize(eventData);
             var buffer = Encoding.UTF8.GetBytes(json);
             await socket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
         }

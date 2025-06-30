@@ -99,6 +99,7 @@ const Chat: React.FC<ChatProps> = ({ sender, messages, onSend, error, loading })
                                     primary={
                                         <Typography
                                             variant="subtitle2"
+                                            sx={{ fontWeight: 'bold' }}
                                             color={message.sender === sender ? 'primary.contrastText' : 'text.primary'}
                                         >
                                             {message.sender}

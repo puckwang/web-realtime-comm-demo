@@ -1,7 +1,7 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WebRealtimeCommDemo.Models;
 using WebRealtimeCommDemo.Services;
+using WebRealtimeCommDemo.Utils;
 
 namespace WebRealtimeCommDemo.Demos.ServerSentEvent;
 
@@ -185,10 +185,7 @@ public class MessagesController : ControllerBase
     /// </summary>
     private async Task SendSseMessage(string eventType, Message message, CancellationToken cancellationToken)
     {
-        var json = JsonSerializer.Serialize(message, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
+        var json = JsonUtils.Serialize(message);
 
         await SendSseEvent(eventType, json, cancellationToken);
     }
