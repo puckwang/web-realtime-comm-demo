@@ -16,7 +16,7 @@ export default function Home() {
                         Choose a Chat Method
                     </Typography>
 
-                    <Typography variant="body1" paragraph align="center">
+                    <Typography variant="body1" align="center">
                         This demo showcases different real-time communication techniques.
                         Select one of the options below to start chatting.
                     </Typography>
@@ -45,6 +45,19 @@ export default function Home() {
                                     sx={{ py: 2 }}
                                 >
                                     Long-Polling Chat
+                                </Button>
+                            </Link>
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 6 }}>
+                            <Link href="/server-sent-event" style={{ textDecoration: 'none' }} passHref>
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    fullWidth
+                                    size="large"
+                                    sx={{ py: 2 }}
+                                >
+                                    Server-Sent Events Chat
                                 </Button>
                             </Link>
                         </Grid>

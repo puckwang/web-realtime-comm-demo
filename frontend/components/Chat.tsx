@@ -133,10 +133,10 @@ const Chat: React.FC<ChatProps> = ({ sender, messages, onSend, error, loading })
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <TextField
                         fullWidth
-                        label="Type a message"
+                        placeholder="Type a message"
                         value={messageInput}
                         onChange={(e) => setMessageInput(e.target.value)}
-                        onKeyPress={handleKeyPress}
+                        onKeyDown={handleKeyPress}
                         variant="outlined"
                         size="small"
                     />
