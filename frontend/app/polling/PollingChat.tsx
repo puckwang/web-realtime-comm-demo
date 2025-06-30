@@ -71,7 +71,7 @@ const PollingChat: React.FC<PollingChatProps> = ({ sender }) => {
             setError(null);
 
             // Send the message to the server
-            let message = await sendMessage(content, sender);
+            const message = await sendMessage(content, sender);
 
             // Add the message to the list immediately
             setMessages(prevMessages => mergeMessages(prevMessages, [message]));

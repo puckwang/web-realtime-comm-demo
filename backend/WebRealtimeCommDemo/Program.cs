@@ -1,6 +1,7 @@
 using Scalar.AspNetCore;
 using WebRealtimeCommDemo.Services;
 using WebRealtimeCommDemo.Demos.WebSocket;
+using WebRealtimeCommDemo.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,13 +16,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapScalarApiReference();
-    app.UseCors(o => o
-        .WithOrigins("http://localhost:3000")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-    );
 }
 
+app.UseCorsFromEnv();
 app.MapOpenApi();
 app.MapControllers();
 app.UseMessagesWebSocket();

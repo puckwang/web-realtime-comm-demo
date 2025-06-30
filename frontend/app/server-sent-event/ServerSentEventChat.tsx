@@ -49,7 +49,7 @@ const ServerSentEventChat: React.FC<ServerSentEventChatProps> = ({ sender }) => 
             setError(null);
 
             // Send the message to the server
-            let message = await sendMessage(content, sender);
+            const message = await sendMessage(content, sender);
 
             // The message will be received through the SSE connection,
             // but we can also add it to the list immediately for better UX
