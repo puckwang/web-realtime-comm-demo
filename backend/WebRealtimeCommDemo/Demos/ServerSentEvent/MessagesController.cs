@@ -1,14 +1,23 @@
-using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using WebRealtimeCommDemo.Models;
 using WebRealtimeCommDemo.Services;
 
-namespace WebRealtimeCommDemo.Controllers.ServerSentEvent;
+namespace WebRealtimeCommDemo.Demos.ServerSentEvent;
 
 [ApiController]
 [Route("api/server-sent-event/messages")]
-public class MessagesController(MessagesService messagesService, IHostApplicationLifetime applicationLifetime) : ControllerBase
+public class MessagesController : ControllerBase
 {
+    private readonly MessagesService _messagesService;
+    private readonly IHostApplicationLifetime _applicationLifetime;
+
+    public MessagesController(MessagesService messagesService, IHostApplicationLifetime applicationLifetime)
+    {
+        _messagesService = messagesService;
+        _applicationLifetime = applicationLifetime;
+    }
+
     /// <summary>
     /// Server Sent Event 端點 - 持續推送新訊息給客戶端
     /// </summary>
@@ -28,7 +37,7 @@ public class MessagesController(MessagesService messagesService, IHostApplicatio
         // 建立結合應用程式關閉和請求取消的 CancellationToken
         using var appShutdownCts = CancellationTokenSource.CreateLinkedTokenSource(
             cancellationToken,
-            applicationLifetime.ApplicationStopping,
+            _applicationLifetime.ApplicationStopping,
             HttpContext.RequestAborted
         );
 
@@ -40,7 +49,7 @@ public class MessagesController(MessagesService messagesService, IHostApplicatio
             await SendSseConnected(combinedCancellationToken);
             
             // 首先發送既有的訊息
-            var existingMessages = messagesService.GetMessages(sinceTime);
+            var existingMessages = _messagesService.GetMessages(sinceTime);
             foreach (var message in existingMessages)
             {
                 await SendSseMessage("message", message, combinedCancellationToken);
@@ -58,7 +67,7 @@ public class MessagesController(MessagesService messagesService, IHostApplicatio
                 }
 
                 // 註冊事件
-                messagesService.NewMessageReceived += OnNewMessageReceived;
+                _messagesService.NewMessageReceived += OnNewMessageReceived;
 
                 try
                 {
@@ -78,7 +87,7 @@ public class MessagesController(MessagesService messagesService, IHostApplicatio
                     if (completed && !combinedCancellationToken.IsCancellationRequested)
                     {
                         // 有新訊息，取得並發送所有新訊息
-                        var newMessages = messagesService.GetMessages(sinceTime);
+                        var newMessages = _messagesService.GetMessages(sinceTime);
                         var latestMessages = newMessages.Where(m => m.Timestamp > sinceTime).ToList();
 
                         foreach (var message in latestMessages)
@@ -92,7 +101,7 @@ public class MessagesController(MessagesService messagesService, IHostApplicatio
                         }
                     }
                 }
-                catch (OperationCanceledException) when (applicationLifetime.ApplicationStopping.IsCancellationRequested)
+                catch (OperationCanceledException) when (_applicationLifetime.ApplicationStopping.IsCancellationRequested)
                 {
                     // 應用程式正在關閉
                     await SendSseEvent("server-shutdown", "Server is shutting down", CancellationToken.None);
@@ -119,7 +128,7 @@ public class MessagesController(MessagesService messagesService, IHostApplicatio
                 finally
                 {
                     // 取消註冊事件
-                    messagesService.NewMessageReceived -= OnNewMessageReceived;
+                    _messagesService.NewMessageReceived -= OnNewMessageReceived;
                 }
             }
         }
@@ -140,7 +149,7 @@ public class MessagesController(MessagesService messagesService, IHostApplicatio
             // 發送連線關閉事件
             try
             {
-                string disconnectReason = applicationLifetime.ApplicationStopping.IsCancellationRequested
+                string disconnectReason = _applicationLifetime.ApplicationStopping.IsCancellationRequested
                     ? "Server shutdown"
                     : HttpContext.RequestAborted.IsCancellationRequested
                         ? "Client disconnected"
@@ -166,7 +175,7 @@ public class MessagesController(MessagesService messagesService, IHostApplicatio
             return BadRequest(new { error = "訊息內容不能為空" });
         }
 
-        var message = messagesService.SendMessage(request.Content, request.Sender ?? "Anonymous");
+        var message = _messagesService.SendMessage(request.Content, request.Sender ?? "Anonymous");
 
         return Ok(message);
     }

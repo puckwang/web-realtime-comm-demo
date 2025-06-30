@@ -1,11 +1,13 @@
 using Scalar.AspNetCore;
 using WebRealtimeCommDemo.Services;
+using WebRealtimeCommDemo.Demos.WebSocket;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddOpenApi()
     .AddSingleton<MessagesService>()
+    .AddSingleton<MessagesWebSocketManager>()
     .AddControllers();
 
 var app = builder.Build();
@@ -22,4 +24,5 @@ if (app.Environment.IsDevelopment())
 
 app.MapOpenApi();
 app.MapControllers();
+app.UseMessagesWebSocket();
 app.Run();

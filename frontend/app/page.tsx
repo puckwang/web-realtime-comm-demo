@@ -61,6 +61,19 @@ export default function Home() {
                                 </Button>
                             </Link>
                         </Grid>
+                        <Grid size={{ xs: 12, sm: 6 }}>
+                            <Link href="/websocket" style={{ textDecoration: 'none' }} passHref>
+                                <Button
+                                    variant="contained"
+                                    color="info"
+                                    fullWidth
+                                    size="large"
+                                    sx={{ py: 2 }}
+                                >
+                                    WebSocket Chat
+                                </Button>
+                            </Link>
+                        </Grid>
                     </Grid>
                 </Paper>
             </Container>
