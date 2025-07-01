@@ -64,7 +64,7 @@ server to client using different approaches:
    dotnet run
    ```
 
-3. The backend API will be available at `http://localhost:5000`
+3. The backend API will be available at `http://localhost:5001`
 
 #### Frontend
 
@@ -94,16 +94,24 @@ You can use Docker Compose to run both the frontend and backend services togethe
 
 2. From the root directory, run:
    ```bash
+   # docker
    docker-compose up -d
+
+   # podman
+   podman-compose up -d
    ```
 
 3. The services will be available at:
     - Frontend: `http://localhost:3000`
-    - Backend: `http://localhost:5000`
+    - Backend: `http://localhost:5001`
 
 4. To stop the services:
    ```bash
-   docker-compose down
+    # docker
+    docker-compose down
+    
+    # podman
+    podman-compose down
    ```
 
 ## 🔧 Environment Variables
@@ -113,7 +121,7 @@ You can use Docker Compose to run both the frontend and backend services togethe
 | Variable                   | Description                               | Default                 |
 |----------------------------|-------------------------------------------|-------------------------|
 | `NODE_ENV`                 | Environment mode (development/production) | `development`           |
-| `NEXT_PUBLIC_API_BASE_URL` | URL of the backend API                    | `http://localhost:5000` |
+| `NEXT_PUBLIC_API_BASE_URL` | URL of the backend API                    | `http://localhost:5001` |
 
 ### Backend
 

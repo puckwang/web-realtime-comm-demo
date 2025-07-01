@@ -23,10 +23,10 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Expose the port the app will run on
-EXPOSE 5000
+EXPOSE 5001
 
 # Set environment variables
-ENV ASPNETCORE_URLS=http://+:5000;
+ENV ASPNETCORE_URLS=http://localhost:5001;
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 # Start the application
